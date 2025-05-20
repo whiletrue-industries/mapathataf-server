@@ -1,0 +1,810 @@
+City יעל is not in the list
+City פוריידיס is not in the list
+City שואבה is not in the list
+City מחנה טלי is not in the list
+City גיתה is not in the list
+City לקיה is not in the list
+City משואות יצחק is not in the list
+City צור הדסה is not in the list
+City אלוני אבא is not in the list
+City מאור is not in the list
+City אודים is not in the list
+City שדה נחום is not in the list
+City נווה אילן is not in the list
+City להבות חביבה is not in the list
+City פקיעין is not in the list
+City ורד יריחו is not in the list
+City הררית is not in the list
+City בית יצחק-שער חפר is not in the list
+City שפיר is not in the list
+City כפר גלים is not in the list
+City קרית יערים is not in the list
+City אפיקים is not in the list
+City נוה זיו is not in the list
+City יקיר is not in the list
+City חצור אשדוד is not in the list
+City א-רינה is not in the list
+City צופים is not in the list
+City עין המפרץ is not in the list
+City מחנה תל נוף is not in the list
+City ג'סר א זרקא is not in the list
+City אביבים is not in the list
+City בניה is not in the list
+City כפר יהושע is not in the list
+City זמר is not in the list
+City שדה אילן is not in the list
+City בית חלקיה is not in the list
+City נערן is not in the list
+City שבי ציון is not in the list
+City סאג'ור is not in the list
+City גדות is not in the list
+City כפר דניאל is not in the list
+City בית נקופה is not in the list
+City גבעות בר is not in the list
+City חוסנייה is not in the list
+City צורית is not in the list
+City אשבל is not in the list
+City אילות is not in the list
+City חשמונאים is not in the list
+City מורן is not in the list
+City משען is not in the list
+City עספיא is not in the list
+City בני עי"ש is not in the list
+City גן שמואל is not in the list
+City מעגן is not in the list
+City מייסר is not in the list
+City אלישמע is not in the list
+City ירחיב is not in the list
+City שגב-שלום is not in the list
+City גני טל is not in the list
+City משגב דב is not in the list
+City מג'ד אל-כרום is not in the list
+City נווה דניאל is not in the list
+City נוף אילון is not in the list
+City דבוריה is not in the list
+City שמשית is not in the list
+City חירות is not in the list
+City כפר עציון is not in the list
+City כפר עזה is not in the list
+City אלון הגליל is not in the list
+City כפר רות is not in the list
+City מצפה אבי"ב is not in the list
+City יד בנימין is not in the list
+City יד רמב"ם is not in the list
+City עלה נגב is not in the list
+City נחלה is not in the list
+City בסמת טבעון is not in the list
+City מורשת is not in the list
+City מכמנים is not in the list
+City קרית ענבים is not in the list
+City כפר ביל"ו is not in the list
+City נוה אילן is not in the list
+City גבעת השלושה is not in the list
+City עראמשה is not in the list
+City בני ראם is not in the list
+City קרית נטפים is not in the list
+City נחם is not in the list
+City באר טוביה is not in the list
+City אום אל-קוטוף is not in the list
+City שקף is not in the list
+City בית חנן is not in the list
+City מישר is not in the list
+City חנתון is not in the list
+City שבי דרום is not in the list
+City עופרה is not in the list
+City אבנת is not in the list
+City אביחיל is not in the list
+City תל שבע is not in the list
+City עילבון is not in the list
+City כפר סירקין is not in the list
+City ינוב is not in the list
+City בית ברל is not in the list
+City נוקדים is not in the list
+City שומרת is not in the list
+City רבבה is not in the list
+City להבים is not in the list
+City כפר הנגיד is not in the list
+City כמאנה is not in the list
+City בן שמן is not in the list
+City תימורים is not in the list
+City יתד is not in the list
+City בית ניר is not in the list
+City כאוכב אבו אל-היג'א is not in the list
+City שדה יואב is not in the list
+City מבוא חמה is not in the list
+City בית גמליאל is not in the list
+City הר עמשא is not in the list
+City טובא זנגריה is not in the list
+City גמזו is not in the list
+City ניר צבי is not in the list
+City חיבת ציון is not in the list
+City מחנה יוכבד is not in the list
+City מבוא חורון is not in the list
+City בית שערים is not in the list
+City יגור is not in the list
+City שדות ים is not in the list
+City טירת צבי is not in the list
+City לפיד is not in the list
+City חיננית is not in the list
+City כאוכב אבו אל היגא is not in the list
+City בית אל is not in the list
+City נגוהות is not in the list
+City בית הלל is not in the list
+City בית נחמיה is not in the list
+City מזרעה is not in the list
+City גדרה is not in the list
+City בענה is not in the list
+City אלון מורה is not in the list
+City סייד (שבט) is not in the list
+City גת רימון is not in the list
+City ניר יפה is not in the list
+City עיספיא is not in the list
+City גת (קיבוץ) is not in the list
+City חוסן is not in the list
+City עין דור is not in the list
+City Maghar is not in the list
+City פני חבר is not in the list
+City מצפה שלם is not in the list
+City פלמחים is not in the list
+City עין עירון is not in the list
+City זיקים is not in the list
+City כיסרא סומיע is not in the list
+City כפר כמא is not in the list
+City דוב"ב is not in the list
+City בצרה is not in the list
+City שבלי - אום אל-גנם is not in the list
+City כוכב יאיר is not in the list
+City סאסא is not in the list
+City קבוצת יבנה is not in the list
+City חצור-אשדוד is not in the list
+City בת עין is not in the list
+City חורפיש is not in the list
+City סביון is not in the list
+City בני רא"ם is not in the list
+City כפר ורדים is not in the list
+City גני עם is not in the list
+City שדמות מחולה is not in the list
+City בחן is not in the list
+City הזורעים is not in the list
+City ירכא is not in the list
+City מיתר is not in the list
+City עין החורש is not in the list
+City עתלית is not in the list
+City כאבול is not in the list
+City מג'דל שמס is not in the list
+City עוזייר is not in the list
+City מבוא מודיעים is not in the list
+City כפר מסריק is not in the list
+City איתן is not in the list
+City חלוץ is not in the list
+City סתריה is not in the list
+City ניר גלים is not in the list
+City גבעון החדשה is not in the list
+City שדה אליהו is not in the list
+City ג'ת is not in the list
+City גן חיים is not in the list
+City הושעיה is not in the list
+City עוצם is not in the list
+City חפץ חיים is not in the list
+City עותניאל is not in the list
+City סמר is not in the list
+City חצבה is not in the list
+City ישרש is not in the list
+City כפר מעש is not in the list
+City נתיב השיירה is not in the list
+City כפר חב"ד is not in the list
+City בית עריף is not in the list
+City עוזיר is not in the list
+City אבשלום is not in the list
+City עטרת is not in the list
+City תלמי אלעזר is not in the list
+City מחנה יהודית is not in the list
+City אחיסמך is not in the list
+City גן השומרון is not in the list
+City ריחן is not in the list
+City בית חנניה is not in the list
+City שדה משה is not in the list
+City ניר אליהו is not in the list
+City גבעת ישעיהו is not in the list
+City קדרים is not in the list
+City מתן is not in the list
+City יודפת is not in the list
+City אספר is not in the list
+City כברי is not in the list
+City פצאל is not in the list
+City מגן שאול is not in the list
+City גלאון is not in the list
+City עין יעקב is not in the list
+City כעביה טבאש חג'אג'רה is not in the list
+City קבוצת שילר is not in the list
+City נצר סרני is not in the list
+City גליל ים is not in the list
+City גבע בנימין is not in the list
+City ארבל is not in the list
+City כפר ביאליק is not in the list
+City חלמיש is not in the list
+City שיבלי is not in the list
+City בועיינה-נוג'ידאת is not in the list
+City שמעה is not in the list
+City קדרון is not in the list
+City מעלה גמלא is not in the list
+City יאנוח-ג'ת is not in the list
+City בן עמי is not in the list
+City רכסים is not in the list
+City מעלה לבונה is not in the list
+City מרחביה is not in the list
+City כפר ראש הניקרה is not in the list
+City בורגתה is not in the list
+City בית רבן is not in the list
+City שעב is not in the list
+City אכסאל is not in the list
+City רומאנה רימון is not in the list
+City מחולה is not in the list
+City פוריה נווה עובד is not in the list
+City דיר אל-אסד is not in the list
+City רגבה is not in the list
+City חוקוק is not in the list
+City שדה נחמיה is not in the list
+City עילוט is not in the list
+City עידן is not in the list
+City כפר הרא"ה is not in the list
+City מפלסים is not in the list
+City תקומה is not in the list
+City אומן is not in the list
+City אליפלט is not in the list
+City כפר תפוח is not in the list
+City קלחים is not in the list
+City תפוח is not in the list
+City Bnei Netzarim is not in the list
+City פוריה עילית is not in the list
+City 155Rosh Haayin is not in the list
+City גבעת אלה is not in the list
+City נתיב הל"ה is not in the list
+City ערב אל נעים is not in the list
+City כפר קרע is not in the list
+City עין השלושה is not in the list
+City לבון is not in the list
+City כפר שמריהו is not in the list
+City מי עמי is not in the list
+City איכסאל is not in the list
+City רוויה is not in the list
+City רמת צבי is not in the list
+City יד חנה is not in the list
+City ענב is not in the list
+City טירת יהודה is not in the list
+City גבעת יערים is not in the list
+City ניל"י is not in the list
+City אפרת is not in the list
+City כפר חים is not in the list
+City טלמון is not in the list
+City מצדות יהודה is not in the list
+City כפר המכבי is not in the list
+City מרחב עם is not in the list
+City כחל is not in the list
+City מצפה נטופה is not in the list
+City עין שמר is not in the list
+City זרחיה is not in the list
+City יוקנעם is not in the list
+City ביצרון is not in the list
+City יזרעאל is not in the list
+City מעון is not in the list
+City אומץ is not in the list
+City נאעורה is not in the list
+City מנשית זבדה is not in the list
+City פורת is not in the list
+City זימרת is not in the list
+City משכיות is not in the list
+City חמ"ד is not in the list
+City אלומה is not in the list
+City מבוא דותן is not in the list
+City מסד is not in the list
+City בית חרות is not in the list
+City עין הבשור is not in the list
+City יד נתן is not in the list
+City ברקת is not in the list
+City דברת is not in the list
+City חרות is not in the list
+City אור הגנוז is not in the list
+City בן זכאי is not in the list
+City אורטל is not in the list
+City כפר מנחם is not in the list
+City עמיר is not in the list
+City גבעת יואב is not in the list
+City ניר בנים is not in the list
+City רקפת is not in the list
+City טובא-זנר'רייה is not in the list
+City תפרח is not in the list
+City כמון is not in the list
+City בית אריה is not in the list
+City שער העמקים is not in the list
+City עין חרוד (מאוחד) is not in the list
+City ספסופה is not in the list
+City נטע is not in the list
+City יעד is not in the list
+City סעד is not in the list
+City עצמון-שגב is not in the list
+City עשרת is not in the list
+City בית קשת is not in the list
+City נהורה is not in the list
+City נווה ירק is not in the list
+City ניר ישראל is not in the list
+City כפר הס is not in the list
+City מכחול is not in the list
+City כפר הרי"ף is not in the list
+City רמת רזיאל is not in the list
+City בית העמק is not in the list
+City שער שומרון is not in the list
+City כינרת (מושבה) is not in the list
+City בית הגדי is not in the list
+City מגדל is not in the list
+City שריד is not in the list
+City גיבתון is not in the list
+City סלאמה is not in the list
+City עין חרוד איחוד is not in the list
+City אחוזת ברק is not in the list
+City בית ג'ן is not in the list
+City רנן is not in the list
+City נחל עוז is not in the list
+City ערערה בנגב is not in the list
+City עין חרוד מאוחד is not in the list
+City כפר ויתקין is not in the list
+City רמת השופט is not in the list
+City מגידו is not in the list
+City חמדת is not in the list
+City מירון is not in the list
+City כרמי קטיף is not in the list
+City גבעת חן is not in the list
+City בני דרור is not in the list
+City עינת is not in the list
+City נווה איתן is not in the list
+City קצר א-סר is not in the list
+City בני עטרות is not in the list
+City נבטים is not in the list
+City בית חורון is not in the list
+City חבר is not in the list
+City בית חשמונאי is not in the list
+City חד נס is not in the list
+City נטף is not in the list
+City שדמות דבורה is not in the list
+City ריינה is not in the list
+City קליה is not in the list
+City כפר מנדא is not in the list
+City גני יוחנן is not in the list
+City עין מאהל is not in the list
+City מנחמיה is not in the list
+City כפר חנניה is not in the list
+City גזית is not in the list
+City בית יהושע is not in the list
+City כעביה-טבאש-חג'אג'רה is not in the list
+City אליאב is not in the list
+City מרחביה (קיבוץ) is not in the list
+City שומרה is not in the list
+City איעבלין is not in the list
+City תוקוע is not in the list
+City גשר הזיו is not in the list
+City שלומית is not in the list
+City דגניה א' is not in the list
+City משמרת is not in the list
+City מעונה is not in the list
+City מגן is not in the list
+City כפר תבור is not in the list
+City ניר עקיבא is not in the list
+City מדרך עוז is not in the list
+City מירב is not in the list
+City הקדושה is not in the list
+City נווה ימין is not in the list
+City בקוע is not in the list
+City קרני שומרון is not in the list
+City סעוה is not in the list
+City מדרשת בן גוריון is not in the list
+City ג'וליס is not in the list
+City רמת רחל is not in the list
+City כפר יעבץ is not in the list
+City מחנה מרים is not in the list
+City כסיפה is not in the list
+City עבדון is not in the list
+City בית אלעזרי is not in the list
+City יונתן is not in the list
+City יקום is not in the list
+City גאולים is not in the list
+City ניר עציון is not in the list
+City קיסריה is not in the list
+City אבו סנאן is not in the list
+City אשלים is not in the list
+City אבירים is not in the list
+City ברוש is not in the list
+City גן יבנה is not in the list
+City חגי is not in the list
+City תרום is not in the list
+City נוגה is not in the list
+City מגדים is not in the list
+City בית אורן is not in the list
+City ציפורי is not in the list
+City טנא is not in the list
+City כפר יאסיף is not in the list
+City אלקנה is not in the list
+City רמות השבים is not in the list
+City כפר חסידים ב' is not in the list
+City ניר דוד is not in the list
+City דאלית אל-כרמל is not in the list
+City אל סייד is not in the list
+City שער הגולן is not in the list
+City אמציה is not in the list
+City מעיליא is not in the list
+City עלי זהב is not in the list
+City כפר ברא is not in the list
+City Tel Aviv-Yafo is not in the list
+City משהד is not in the list
+City כפר טרומן is not in the list
+City אחיעזר is not in the list
+City גנות is not in the list
+City כפר גליקסון is not in the list
+City מועצה אזורית אשכול is not in the list
+City נין is not in the list
+City רווחה is not in the list
+City מצובה is not in the list
+City חספין is not in the list
+City חרוצים is not in the list
+City דורות is not in the list
+City כפר האורנים is not in the list
+City אבו גוש is not in the list
+City אלעזר is not in the list
+City מנות is not in the list
+City שעלבים is not in the list
+City בארות יצחק is not in the list
+City פסגות is not in the list
+City דייר חנא is not in the list
+City רמות נפתלי is not in the list
+City צרופה is not in the list
+City אורנית is not in the list
+City ג'דיידה מכר is not in the list
+City ראס אל-עין is not in the list
+City דייר אל-אסד is not in the list
+City שילה is not in the list
+City מחנה יפה is not in the list
+City הדר עם is not in the list
+City בני יהודה is not in the list
+City יכיני is not in the list
+City עזר is not in the list
+City ראמה is not in the list
+City תלמי יפה is not in the list
+City כוכב מיכאל is not in the list
+City אֳרָנִית is not in the list
+City בית אריה-עופרים is not in the list
+City ניר דוד (תל עמל) is not in the list
+City כפר יחזקאל is not in the list
+City ראש צורים is not in the list
+City פטיש is not in the list
+City משמר הנגב is not in the list
+City בוקעאתא is not in the list
+City יערה is not in the list
+City כפר כנא is not in the list
+City נוה צוף is not in the list
+City כפר נטר is not in the list
+City רביבים is not in the list
+City ביר הדאג' is not in the list
+City גורנות הגליל is not in the list
+City בר יוחאי is not in the list
+City מעלה מכמש is not in the list
+City היוגב is not in the list
+City כורזים is not in the list
+City סלעית is not in the list
+City אבן מנחם is not in the list
+City עזריאל is not in the list
+City כפר שמואל is not in the list
+City בית אלפא is not in the list
+City שדה בוקר is not in the list
+City חורה is not in the list
+City גבת is not in the list
+City כפר חיטים is not in the list
+City ג'דיידה-מכר is not in the list
+City אחווה is not in the list
+City בית זית is not in the list
+City תל עדשים is not in the list
+City כינרת-קבוצה is not in the list
+City מגדלים is not in the list
+City אעבלין is not in the list
+City חוגלה is not in the list
+City תראבין א-צאנע (שבט) is not in the list
+City בן שמן (כפר נוער) is not in the list
+City אלון שבות is not in the list
+City נאות מרדכי is not in the list
+City פסוטה is not in the list
+City עין קיניא is not in the list
+City Baqa al-Gharbiyye is not in the list
+City מצר is not in the list
+City שפיים is not in the list
+City לוחמי הגטאות is not in the list
+City קריית ארבע is not in the list
+City שלוחות is not in the list
+City יוטבתה is not in the list
+City ניר יצחק is not in the list
+City באר אורה is not in the list
+City להב is not in the list
+City ג'סר א-זרקא is not in the list
+City טורעאן is not in the list
+City חדיד is not in the list
+City מרכז שפירא is not in the list
+City עמיעד is not in the list
+City עברון is not in the list
+City קרית ארבע is not in the list
+City ברכיה is not in the list
+City דיר חנא is not in the list
+City גת is not in the list
+City ג'ש (גוש חלב) is not in the list
+City הסוללים is not in the list
+City בית קמה is not in the list
+City בסמ"ה is not in the list
+City אבו ג'ווייעד (שבט) is not in the list
+City מצפה רמון is not in the list
+City לב יתיר is not in the list
+City כפר ברוך is not in the list
+City אבן ספיר is not in the list
+City בית זרע is not in the list
+City רתמים is not in the list
+City דבירה is not in the list
+City הר אדר is not in the list
+City מצליח is not in the list
+City רמת הכובש is not in the list
+City קדש ברנע is not in the list
+City מעלה עמוס is not in the list
+City מתתיהו is not in the list
+City שתולה is not in the list
+City מלכיה is not in the list
+City ברוכין is not in the list
+City רמת ישי is not in the list
+City רמות מנשה is not in the list
+City כרמי צור is not in the list
+City כרם מהר"ל is not in the list
+City ברכה is not in the list
+City בצת is not in the list
+City יפיע is not in the list
+City גשר is not in the list
+City מנוחה is not in the list
+City עין העמק is not in the list
+City כרם בן זמרה is not in the list
+City מסעדה is not in the list
+City תובל is not in the list
+City עתניאל is not in the list
+City צלפון is not in the list
+City גבעת זאב is not in the list
+City בטחה is not in the list
+City בני דקלים is not in the list
+City עמנואל is not in the list
+City ערערה is not in the list
+City ברור חיל is not in the list
+City סולם is not in the list
+City עין איילה is not in the list
+City באר גנים is not in the list
+City משאבי שדה is not in the list
+City אלומות is not in the list
+City אשרת is not in the list
+City בת חפר is not in the list
+City נוה דניאל is not in the list
+City שדה אליעזר is not in the list
+City נצר חזני is not in the list
+City עין הנצי"ב is not in the list
+City מולדת is not in the list
+City קרית עקרון is not in the list
+City הבונים is not in the list
+City חלץ is not in the list
+City גבעת אבני is not in the list
+City זיתן is not in the list
+City מישגב is not in the list
+City עדי is not in the list
+City גן נר is not in the list
+City ביטחה is not in the list
+City זמרת is not in the list
+City משמר הירדן is not in the list
+City סנסנה is not in the list
+City טפחות is not in the list
+City ריחאניה is not in the list
+City תמרת is not in the list
+City רשפון is not in the list
+City איתמר is not in the list
+City חגור is not in the list
+City אבטין is not in the list
+City עלמון is not in the list
+City עין ורד is not in the list
+City כפר חושן is not in the list
+City משמרות is not in the list
+City שדה יצחק is not in the list
+City ברקן is not in the list
+City שתולים is not in the list
+City עומר is not in the list
+City מדרשת רופין is not in the list
+City מגל is not in the list
+City שוקדה is not in the list
+City טובא-זנגריה is not in the list
+City לוטם is not in the list
+City עמינדב is not in the list
+City נס עמים is not in the list
+City אלפי מנשה is not in the list
+City מסילות is not in the list
+City רם און is not in the list
+City עלי is not in the list
+City אבני חפץ is not in the list
+City מסילת ציון is not in the list
+City אשדות יעקב איחוד is not in the list
+City מעיין ברוך is not in the list
+City לכיש is not in the list
+City רומאנה is not in the list
+City עין יהב is not in the list
+City ניצן is not in the list
+City עינב is not in the list
+City נופית is not in the list
+City נורדיה is not in the list
+City מג`ד אל-כרום is not in the list
+City אשבול is not in the list
+City גילת is not in the list
+City עזריקם is not in the list
+City בית"ר עילית is not in the list
+City גלעד is not in the list
+City אבן שמואל is not in the list
+City קורנית is not in the list
+City תושיה is not in the list
+City זרועה is not in the list
+City יסודות is not in the list
+City בת הדר is not in the list
+City תקוע is not in the list
+City נחלים is not in the list
+City ירקונה is not in the list
+City כוכב השחר is not in the list
+City אבני איתן is not in the list
+City מדרשת בן-גוריון is not in the list
+City כסרא-סמיע is not in the list
+City מבוא ביתר is not in the list
+City חרשים is not in the list
+City משגב עם is not in the list
+City כרמל is not in the list
+City גינתון is not in the list
+City כפר עקב is not in the list
+City שקד is not in the list
+City נעמ"ה is not in the list
+City יאנוח ג'ת is not in the list
+City עין צורים is not in the list
+City סוסיה is not in the list
+City גני מודיעין is not in the list
+City כפר הנוער בן שמן is not in the list
+City משמר איילון is not in the list
+City טייבה (בשרון) is not in the list
+City חמדיה is not in the list
+City צופית is not in the list
+City גבעת ברנר is not in the list
+City מזור is not in the list
+City ניצן ב' is not in the list
+City דמיידה is not in the list
+City שלומי is not in the list
+City דולב is not in the list
+City ביר אל-מכסור is not in the list
+City אור הנר is not in the list
+City משמר דוד is not in the list
+City מנוף is not in the list
+City צובה is not in the list
+City הר גילה is not in the list
+City כפר מונש is not in the list
+City אדורה is not in the list
+City גרופית is not in the list
+City פקיעין (בוקייעה) is not in the list
+City בני ציון is not in the list
+City ירדנה is not in the list
+City חמאם is not in the list
+City הילה is not in the list
+City זרזיר is not in the list
+City מחנה הילה is not in the list
+City מצפה אילן is not in the list
+City מעלה עירון is not in the list
+City ראס עלי is not in the list
+City אבו קרינאת (יישוב) is not in the list
+City אבטליון is not in the list
+City כפר חסידים א' is not in the list
+City נחושה is not in the list
+City נעלה is not in the list
+City גילון is not in the list
+City Tsufin (Tsofim) is not in the list
+City אחיהוד is not in the list
+City ספיר is not in the list
+City מעגן מיכאל is not in the list
+City בנימינה is not in the list
+City כוכב יעקב is not in the list
+City צוריאל is not in the list
+City גבעת כ"ח is not in the list
+City געש is not in the list
+City כפר קיש is not in the list
+City שייח' דנון is not in the list
+City כפר הנוער הדתי is not in the list
+City יסוד המעלה is not in the list
+City שבי שומרון is not in the list
+City אליכין is not in the list
+City כפר אדומים is not in the list
+City בית שקמה is not in the list
+City ג'יש is not in the list
+City גיאה is not in the list
+City נווה אור is not in the list
+City אשחר is not in the list
+City מיצר is not in the list
+City נחף is not in the list
+City נס הרים is not in the list
+City גיניגר is not in the list
+City ג'ולס is not in the list
+City עין השופט is not in the list
+City אמנון is not in the list
+City ג'יסר א-זרקא is not in the list
+City ברוכים קלע אלון is not in the list
+City מגשימים is not in the list
+City שדה עוזיהו is not in the list
+City נווה מיכאל is not in the list
+City מרום גולן is not in the list
+City עיילבון is not in the list
+City עין שריד is not in the list
+City עארה-ערערה is not in the list
+City שדה יעקב is not in the list
+City מבואות יריחו is not in the list
+City רומת הייב is not in the list
+City צפריה is not in the list
+City כנף is not in the list
+City מזרע is not in the list
+City מעלה אפרים is not in the list
+City שורש is not in the list
+City קדומים is not in the list
+City חצור הגלילית is not in the list
+City שגב שלום שוקייב א סאלם is not in the list
+City נירית is not in the list
+City טללים is not in the list
+City יפיע יאפת א-נאס'רה is not in the list
+City אל-בוקיעה פקיעין is not in the list
+City נען is not in the list
+City בית דגן is not in the list
+City אחיטוב is not in the list
+City תלמים is not in the list
+City כפר סאלד is not in the list
+City עפרה is not in the list
+City פדואל is not in the list
+City כפר זיתים is not in the list
+City כפר ורבורג is not in the list
+City טל אל is not in the list
+City כרמי יוסף is not in the list
+City כפר רופין is not in the list
+City גפן is not in the list
+City מעגלים is not in the list
+City סער is not in the list
+City עין ראפה is not in the list
+City סלמה is not in the list
+City דגניה ב' is not in the list
+City בני דרום is not in the list
+City להבות הבשן is not in the list
+City שדה ורבורג is not in the list
+City נחליאל is not in the list
+City קדימה is not in the list
+City מכמורת is not in the list
+City ייט"ב is not in the list
+City אלמגור is not in the list
+City שער אפרים is not in the list
+City חברון is not in the list
+City עלמה is not in the list
+City מצפה יריחו is not in the list
+City מעלה גלבוע is not in the list
+City יובלים is not in the list
+City בוסתן הגליל is not in the list
+City אום בטין is not in the list
+City עין אל-אסד is not in the list
+City כפר אביב is not in the list
+City תל יוסף is not in the list
+City נגבה is not in the list
+City כרכום is not in the list
+City איבטין is not in the list
+City עולש is not in the list
+City כרם ביבנה is not in the list
+City אבו תלול is not in the list
+City פארן is not in the list
+City ערערה-בנגב is not in the list
+City גבעת חביבה is not in the list
+City יבנאל is not in the list
+City חמד is not in the list
+City קשת is not in the list
+City מענית is not in the list
+City בלפוריה is not in the list
+City תלם is not in the list
+City גבעת עוז is not in the list
+City נירעם is not in the list
+City בית גוברין is not in the list

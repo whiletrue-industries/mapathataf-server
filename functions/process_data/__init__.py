@@ -1,3 +1,4 @@
+import decimal
 from firebase_admin import firestore
 from pathlib import Path
 import dataflows as DF
@@ -5,6 +6,8 @@ import json
 import csv
 import slugify
 import hashlib
+import uuid
+import datetime
 
 csv.field_size_limit(1000000000)
 
@@ -22,9 +25,9 @@ def count(city_names):
             # print(f"Processing city: {city!r}")
             if city in counts:
                 counts[city] += 1
-                if len(row['records']) > 6:
-                    print(f"Row {row['_id']} has {len(row['records'])} records\n")
-                    print(json.dumps(row['records'], indent=2, ensure_ascii=False))
+                if len(row['official']) > 6:
+                    print(f"Row {row['_id']} has {len(row['official'])} records\n")
+                    print(json.dumps(row['official'], indent=2, ensure_ascii=False))
             else:
                 missing.add(city)
             yield row
@@ -64,28 +67,61 @@ def slugify_row():
         func
     )
 
+def prepare_item(item):
+    if isinstance(item, dict):
+        return {k: prepare_item(v) for k, v in item.items()}
+    elif isinstance(item, list):
+        return [prepare_item(v) for v in item]
+    elif isinstance(item, decimal.Decimal):
+        return float(item)
+    else:
+        return item
+
 def load_to_storage():
     db = firestore.client()
     added_cities = set()
+    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     def func(row):
-        print(f"Loading row with ID {row['city-slug']}/{row['id-slug']} to storage")
-        db.collection(row['city-slug']).document(row['id-slug']).set(row, merge=True)
+        # print(f"Loading row with ID {row['city-slug']}/{row['id-slug']} to storage")
+        ref = db.collection('c', row['city-slug'], 'items').document(row['id-slug'])
+        item = dict(
+            key=str(uuid.uuid4()),
+            info=row,
+        )
+        item['official'] = item['info'].pop('official', [])
+        item['info']['updated_at'] = now
+        item = prepare_item(item)
+        # ref.set(item)
+        if ref.get().exists:
+            ref.set(item, merge=['info', 'official'])
+        else:
+            ref.set(item)
         if row['city-slug'] not in added_cities:
-            config = db.collection(row['city-slug']).document('.config')
-            if not config.get().exists():
+            config = db.collection('c').document(row['city-slug'])
+            old = db.collection('c', row['city-slug'], 'config').document('.config')
+            if old.get().exists:
+                old_rec = old.get().to_dict()
+                old.delete()
+                config.set(old_rec)
+            if not config.get().exists:
                 config.set({
-                    'key': str(hashlib.uuid4()),
+                    'key': str(uuid.uuid4()),
                     'metadata': {
                         'city': row['city'],
                     }
                 })
             added_cities.add(row['city-slug'])
+            # for item in db.collection('c', row['city-slug'], 'items').stream():
+            #     item_ref = db.collection('c', row['city-slug'], 'items').document(item.id)
+            #     item = item_ref.get().to_dict() 
+            #     if not item.get('key'):
+            #         item_ref.delete()
 
     return func
 
 def process_data():
     print("Scraping data...")
-    URL = 'https://next.obudget.org/datapackages/facilities/all/all-facilities.csv?a=2'
+    URL = 'https://next.obudget.org/datapackages/facilities/all/datapackage.json'
     city_names = list(csv.DictReader(open(CURRENT_DIR / 'city_names.csv')))
     cities = [row['city'] for row in city_names]
     city_name_map = dict()
@@ -94,16 +130,21 @@ def process_data():
             if row.get(key):
                 city_name_map[row[key]] = row['city']
     print(f"Number of cities: {len(cities)}")
-    DF.Flow(
+    ds = DF.Flow(
         DF.load(URL),
-        DF.set_type('records', type='array', transform=json.loads),
+        # DF.set_type('records', type='array', transform=json.loads),
         map_names(city_name_map),
-        count(cities),
+        # count(cities),
         DF.filter_rows(lambda row: row['city'] in cities),
         slugify_row(),
         load_to_storage(),
         DF.printer(),
-    ).process()
+    ).datastream()
+    for res in ds.res_iter:
+        for i, row in enumerate(res):
+            if i % 1000 == 0:
+                yield(dict(msg=f"Processed {i} rows from resource"))
+            # yield row
 
 if __name__ == '__main__':
     process_data()

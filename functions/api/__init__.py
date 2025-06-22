@@ -59,11 +59,11 @@ def create_item(workspace):
     key = flask.request.headers.get("Authorization")
     authenticate(workspace, key, ["admin"])
     metadata = flask.request.json
-    item_id = str(uuid.uuid4())
+    item_id = str(uuid.uuid4()).split("-")[-1]
     item_key = str(uuid.uuid4())
-    item = {"key": item_key, **metadata}
+    item = {"key": item_key, 'info': {}, 'user': {}, 'admin': metadata}
     db.collection(WS, workspace, ITEMS).document(item_id).set(item)
-    return {"item_id": item_id, "item_key": item_key}, 201
+    return {"id": item_id, **item}, 201
 
 @app.get("/<workspace>")
 def get_workspace(workspace):
@@ -78,6 +78,8 @@ def get_workspace(workspace):
 def process_item(item, privilege):
     if privilege > PRIVILEGE_PRIVATE_KEY:
         ret = item
+    elif item.get('admin', {}).get(PRIVATE_KEY + 'deleted'):
+        return None
     elif privilege == PRIVILEGE_PRIVATE_KEY:
         ret = dict(
             user=item.get("user") or {},
@@ -85,6 +87,8 @@ def process_item(item, privilege):
             info=item.get("info") or {},
             official=item.get("official") or [],
         )
+    elif item.get('admin', {}).get(PRIVATE_KEY + 'app_publication') is False:
+        return None
     else:
         ret = dict(
             user=sanitize_metadata(item.get("user"), privilege < PRIVILEGE_PRIVATE_KEY) or {},
@@ -128,6 +132,7 @@ def get_items(workspace):
             process_item(item, privilege)
             for item in items
         )
+        items_metadata = (item for item in items_metadata if item is not None)
         paginated_items = list(islice(items_metadata, page * page_size, (page + 1) * page_size))
     except Exception as e:
         msg = str(e)
@@ -152,6 +157,8 @@ def get_item(workspace, item_id):
             flask.abort(403, "Unauthorized")
         privilege = PRIVILEGE_PRIVATE_KEY
     ret = process_item(item, privilege)
+    if ret is None:
+        flask.abort(403, "Unauthorized or item deleted")
     return ret, 200
 
 @app.put("/<workspace>/<item_id>")

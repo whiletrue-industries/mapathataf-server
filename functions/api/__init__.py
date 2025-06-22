@@ -1,9 +1,11 @@
 import json
+from firebase_functions.params import SecretParam
 from firebase_admin import firestore
 import flask
 import uuid
 from itertools import islice
 import datetime
+import requests
 
 db = firestore.client()
 app = flask.Flask(__name__)
@@ -15,6 +17,44 @@ PRIVILEGE_PUBLIC = 0
 WS = 'c'
 ITEMS = 'items'
 PRIVATE_KEY = '_private_'
+
+GOOGLE_MAPS_API_KEY = SecretParam("GOOGLE_MAPS_API_KEY").value.strip()
+
+
+def geocode(address):
+    url = f'https://maps.googleapis.com/maps/api/geocode/json'
+    params = {
+        'address': address,
+        'key': GOOGLE_MAPS_API_KEY,
+        'language': 'iw',
+        'components': 'country:IL',
+    }
+    response = requests.get(url, params=params)
+    result = response.json()
+    update = dict(
+        _private_geocoding_status='INITIAL'
+    )
+    if result['status'] == 'OK':
+        result = result['results'][0]
+        accuracy = result['geometry']['location_type']
+        if accuracy in {'ROOFTOP', 'RANGE_INTERPOLATED'}:
+            location = result['geometry']['location']
+            update.update(dict(
+                lat=location['lat'],
+                lng=location['lng'],
+                formatted_address=result['formatted_address'],
+                _private_geocoding_status='OK',
+            ))
+        else:
+            update.update(dict(
+                _private_geocoding_status='INACCURATE',
+            ))
+        for component in result['address_components']:
+            if 'locality' in component['types']:
+                update.update(dict(
+                    city=component['long_name'],
+                ))
+    return update
 
 # Helper functions for authentication and utility
 # def generate_keys():
@@ -61,7 +101,7 @@ def create_item(workspace):
     metadata = flask.request.json
     item_id = str(uuid.uuid4()).split("-")[-1]
     item_key = str(uuid.uuid4())
-    item = {"key": item_key, 'info': {}, 'user': {}, 'admin': metadata}
+    item = {"key": item_key, 'info': {'_id': item_id, 'source': 'admin'}, 'user': {}, 'admin': metadata}
     db.collection(WS, workspace, ITEMS).document(item_id).set(item)
     return {"id": item_id, **item}, 201
 
@@ -172,8 +212,11 @@ def update_item(workspace, item_id):
         if not item or item["key"] != item_key:
             flask.abort(403, "Unauthorized")
         privilege = PRIVILEGE_PRIVATE_KEY
+    item.setdefault('info', {}).update({'_id': item_id})
     metadata = flask.request.json
     metadata = sanitize_metadata(metadata, privilege < PRIVILEGE_PRIVATE_KEY)
+    if 'address' in metadata:
+        metadata.update(geocode(metadata['address']))
     metadata['updated_at'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     if privilege > PRIVILEGE_PRIVATE_KEY:
         item.setdefault('admin', {}).update(metadata)

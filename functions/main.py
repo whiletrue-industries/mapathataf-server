@@ -15,7 +15,12 @@ def process_data(req: https_fn.Request) -> https_fn.Response:
     return https_fn.Response(generate(), status=200, mimetype='text/event-stream')
 
 
-@https_fn.on_request(region='europe-west4', cors=options.CorsOptions(cors_origins="*", cors_methods=["post", "get", "put", "delete"]), memory=options.MemoryOption.MB_512)
+@https_fn.on_request(
+        region='europe-west4',
+        cors=options.CorsOptions(cors_origins="*", cors_methods=["post", "get", "put", "delete"]),
+        memory=options.MemoryOption.MB_512,
+        secrets=['GOOGLE_MAPS_API_KEY']
+)
 def api(req: https_fn.Request) -> https_fn.Response:
     with api_app.request_context(req.environ):
         return api_app.full_dispatch_request()

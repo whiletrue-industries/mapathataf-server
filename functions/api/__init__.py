@@ -126,6 +126,7 @@ def process_item(item, privilege):
             admin=sanitize_metadata(item.get("admin"), privilege < PRIVILEGE_ADMIN) or {},
             info=item.get("info") or {},
             official=item.get("official") or [],
+            id=item['id']
         )
     elif item.get('admin', {}).get(PRIVATE_KEY + 'app_publication') is False:
         return None
@@ -135,6 +136,7 @@ def process_item(item, privilege):
             admin=sanitize_metadata(item.get("admin"), privilege < PRIVILEGE_ADMIN) or {},
             info=item.get("info") or {},
             official=item.get("official") or [],
+            id=item['id']
         )
     ret['_p'] = privilege
     return ret
@@ -212,7 +214,9 @@ def update_item(workspace, item_id):
         if not item or item["key"] != item_key:
             flask.abort(403, "Unauthorized")
         privilege = PRIVILEGE_PRIVATE_KEY
-    item.setdefault('info', {}).update({'_id': item_id})
+    if not item.get('info', {}).get('_id'):
+        item.setdefault('info', {}).update({'_id': item_id})
+        item_ref.update({"info": item["info"]})
     metadata = flask.request.json
     metadata = sanitize_metadata(metadata, privilege < PRIVILEGE_PRIVATE_KEY)
     if 'address' in metadata:

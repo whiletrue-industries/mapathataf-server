@@ -87,6 +87,7 @@ def load_to_storage():
         item = dict(
             key=str(uuid.uuid4()),
             info=row,
+            id=row['id-slug'],
         )
         item['official'] = item['info'].pop('official', [])
         item['info']['updated_at'] = now

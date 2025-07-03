@@ -116,6 +116,7 @@ def get_workspace(workspace):
     return ret, 200
 
 def process_item(item, privilege):
+    item['id'] = item.get('id') or item.get('info', {}).get('_id')
     if privilege > PRIVILEGE_PRIVATE_KEY:
         ret = item
     elif item.get('admin', {}).get(PRIVATE_KEY + 'deleted'):

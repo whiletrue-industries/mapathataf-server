@@ -10,14 +10,13 @@ import requests
 db = firestore.client()
 app = flask.Flask(__name__)
 
-# Set caching headers for all responses (max 5 minutes)
+# Disable caching for all API responses
 @app.after_request
-def add_cache_headers(response):
-    # Set Cache-Control header to limit caching to 5 minutes (300 seconds)
-    response.headers['Cache-Control'] = 'public, max-age=300'
-    # Set Expires header as a fallback for older clients
-    expires_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=5)
-    response.headers['Expires'] = expires_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
+def add_no_cache_headers(response):
+    # Prevent all caching
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     return response
 
 PRIVILEGE_ADMIN = 4

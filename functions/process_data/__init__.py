@@ -121,7 +121,7 @@ def load_to_storage():
     return func
 
 def process_data():
-    print("Scraping data...")
+    yield(dict(msg="Scraping data..."))
     URL = 'https://next.obudget.org/datapackages/facilities/all/datapackage.json'
     city_names = list(csv.DictReader(open(CURRENT_DIR / 'city_names.csv')))
     cities = [row['city'] for row in city_names]
@@ -130,7 +130,7 @@ def process_data():
         for key in ['option1', 'option2', 'option3']:
             if row.get(key):
                 city_name_map[row[key]] = row['city']
-    print(f"Number of cities: {len(cities)}")
+    yield(dict(msg=f"Number of cities: {len(cities)}"))
     ds = DF.Flow(
         DF.load(URL),
         # DF.set_type('records', type='array', transform=json.loads),

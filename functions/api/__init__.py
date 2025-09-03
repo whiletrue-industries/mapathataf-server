@@ -10,6 +10,16 @@ import requests
 db = firestore.client()
 app = flask.Flask(__name__)
 
+# Set caching headers for all responses (max 5 minutes)
+@app.after_request
+def add_cache_headers(response):
+    # Set Cache-Control header to limit caching to 5 minutes (300 seconds)
+    response.headers['Cache-Control'] = 'public, max-age=300'
+    # Set Expires header as a fallback for older clients
+    expires_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=5)
+    response.headers['Expires'] = expires_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    return response
+
 PRIVILEGE_ADMIN = 4
 PRIVILEGE_PRIVATE_KEY = 3
 PRIVILEGE_PUBLIC = 0
@@ -116,7 +126,7 @@ def get_workspace(workspace):
     return ret, 200
 
 def process_item(item, privilege):
-    item['id'] = item.get('id') or item.get('info', {}).get('_id')
+    item['id'] = item.get('_doc_id')
     if privilege > PRIVILEGE_PRIVATE_KEY:
         ret = item
     elif item.get('admin', {}).get(PRIVATE_KEY + 'deleted'):
@@ -167,7 +177,7 @@ def get_items(workspace):
             direction = firestore.Query.DESCENDING
         items = items.order_by(order_by, direction=direction)
     items = items.stream()
-    items = (dict(**doc.to_dict(), id=doc.id) for doc in items)
+    items = (dict(**doc.to_dict(), _doc_id=doc.id) for doc in items)
     items = list(items)
     print(f"Items for {workspace}: {items}")
     try:

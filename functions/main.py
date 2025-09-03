@@ -12,6 +12,17 @@ from api import app as api_app
 @scheduler_fn.on_schedule(region='europe-west1', schedule="0 0 * * *", timezone=scheduler_fn.Timezone("Israel"), timeout_sec=900)
 def data_processing(event: scheduler_fn.ScheduledEvent) -> https_fn.Response:
     print("Data processing triggered by scheduler")
+    start = time.time()
+    for bit in process_data_fn():
+        ret = json.dumps(bit, ensure_ascii=False)
+        elapsed = time.time() - start
+        print(f'{elapsed:<10} {ret}')
+    print("Data processing completed")
+    return 'DONE', 200
+
+@https_fn.on_request(region='europe-west1', timeout_sec=900)
+def data_processing_s(event: scheduler_fn.ScheduledEvent) -> https_fn.Response:
+    print("Data processing triggered by http request")
     def generate():
         start = time.time()
         for bit in process_data_fn():
@@ -19,8 +30,8 @@ def data_processing(event: scheduler_fn.ScheduledEvent) -> https_fn.Response:
             elapsed = time.time() - start
             print(f'{elapsed:<10} {ret}')
             yield f"data: {ret}\n\n"
+        print("Data processing completed")
     return https_fn.Response(generate(), status=200, mimetype='text/event-stream')
-
 
 @https_fn.on_request(
         region='europe-west4',

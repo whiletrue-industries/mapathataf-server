@@ -79,7 +79,7 @@ def prepare_item(item):
 
 def load_to_storage():
     db = firestore.client()
-    added_cities = set()
+    # added_cities = set()
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     def func(row):
         # print(f"Loading row with ID {row['city-slug']}/{row['id-slug']} to storage")
@@ -97,21 +97,21 @@ def load_to_storage():
             ref.set(item, merge=['info', 'official'])
         else:
             ref.set(item)
-        if row['city-slug'] not in added_cities:
-            config = db.collection('c').document(row['city-slug'])
-            old = db.collection('c', row['city-slug'], 'config').document('.config')
-            if old.get().exists:
-                old_rec = old.get().to_dict()
-                old.delete()
-                config.set(old_rec)
-            if not config.get().exists:
-                config.set({
-                    'key': str(uuid.uuid4()),
-                    'metadata': {
-                        'city': row['city'],
-                    }
-                })
-            added_cities.add(row['city-slug'])
+        # if row['city-slug'] not in added_cities:
+        #     config = db.collection('c').document(row['city-slug'])
+        #     old = db.collection('c', row['city-slug'], 'config').document('.config')
+        #     if old.get().exists:
+        #         old_rec = old.get().to_dict()
+        #         old.delete()
+        #         config.set(old_rec)
+        #     if not config.get().exists:
+        #         config.set({
+        #             'key': str(uuid.uuid4()),
+        #             'metadata': {
+        #                 'city': row['city'],
+        #             }
+        #         })
+        #     added_cities.add(row['city-slug'])
             # for item in db.collection('c', row['city-slug'], 'items').stream():
             #     item_ref = db.collection('c', row['city-slug'], 'items').document(item.id)
             #     item = item_ref.get().to_dict() 

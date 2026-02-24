@@ -160,29 +160,38 @@ def get_items(workspace):
     order_by = flask.request.args.get("order_by")
     filters = flask.request.args.get("filters", type=str)
     direction = firestore.Query.ASCENDING
-    items = db.collection(WS, workspace, ITEMS)
-    if filters:
-        filters = filters.split("|")
-        for filter in filters:
-            key, op, value = filter.split(None, 2)
-            try:
-                value = json.loads(value)
-            except:
-                pass
-            items = items.where(key, op, value)
-    if order_by:
-        if order_by.startswith("-"):
-            order_by = order_by[1:]
-            direction = firestore.Query.DESCENDING
-        items = items.order_by(order_by, direction=direction)
-    items = items.stream()
-    items = (dict(**doc.to_dict(), _doc_id=doc.id) for doc in items)
-    items = list(items)
-    print(f"Items for {workspace}: {items}")
+    config_ref = db.collection(WS).document(workspace)
+    config = config_ref.get().to_dict()
+    if config.get('metadata', {}).get('city_links'):
+        workspaces = config['metadata']['city_links']
+    else:
+        workspaces = [workspace]
+    ret_items = []
+    for ws in workspaces:
+        items = db.collection(WS, ws, ITEMS)
+        if filters:
+            filters = filters.split("|")
+            for filter in filters:
+                key, op, value = filter.split(None, 2)
+                try:
+                    value = json.loads(value)
+                except:
+                    pass
+                items = items.where(key, op, value)
+        if order_by:
+            if order_by.startswith("-"):
+                order_by = order_by[1:]
+                direction = firestore.Query.DESCENDING
+            items = items.order_by(order_by, direction=direction)
+        items = items.stream()
+        items = (dict(**doc.to_dict(), _doc_id=doc.id) for doc in items)
+        items = list(items)
+        ret_items.extend(items)
+        print(f"Items for {ws}: {items}")
     try:
         items_metadata = (
             process_item(item, privilege)
-            for item in items
+            for item in ret_items
         )
         items_metadata = (item for item in items_metadata if item is not None)
         paginated_items = list(islice(items_metadata, page * page_size, (page + 1) * page_size))

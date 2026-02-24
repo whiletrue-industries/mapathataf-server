@@ -99,11 +99,6 @@ def load_to_storage():
             ref.set(item)
         if row['city-slug'] not in added_cities:
             config = db.collection('c').document(row['city-slug'])
-        #     old = db.collection('c', row['city-slug'], 'config').document('.config')
-        #     if old.get().exists:
-        #         old_rec = old.get().to_dict()
-        #         old.delete()
-        #         config.set(old_rec)
             if not config.get().exists:
                 config.set({
                     'key': str(uuid.uuid4()),
@@ -112,11 +107,6 @@ def load_to_storage():
                     }
                 })
             added_cities.add(row['city-slug'])
-            # for item in db.collection('c', row['city-slug'], 'items').stream():
-            #     item_ref = db.collection('c', row['city-slug'], 'items').document(item.id)
-            #     item = item_ref.get().to_dict() 
-            #     if not item.get('key'):
-            #         item_ref.delete()
 
     return func
 
@@ -146,6 +136,23 @@ def process_data():
             if i % 1000 == 0:
                 yield(dict(msg=f"Processed {i} rows from resource"))
             # yield row
+
+    db = firestore.client()
+    eshkol = list(csv.DictReader(open(CURRENT_DIR / 'eshkol.csv')))
+    yield(dict(msg=f"Loaded eshkol mappings for {len(eshkol)} eshkol entries"))
+    for row in eshkol:
+        eshkol_slug = row['slug']
+        eshkol_name = row['name']
+        city_links = row['city_links'].split(';')
+        config = db.collection('c').document(eshkol_slug)
+        if not config.get().exists:
+            config.set({
+                'key': str(uuid.uuid4()),
+                'metadata': {
+                    'city': eshkol_name,
+                    'city_links': city_links,
+                }
+            })
 
 if __name__ == '__main__':
     process_data()

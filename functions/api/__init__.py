@@ -138,7 +138,7 @@ def process_item(item, privilege):
             official=item.get("official") or [],
             id=item['id']
         )
-    elif item.get('admin', {}).get(PRIVATE_KEY + 'app_publication') is False:
+    elif item.get('admin', {}).get('app_publication') is False:
         return None
     else:
         ret = dict(

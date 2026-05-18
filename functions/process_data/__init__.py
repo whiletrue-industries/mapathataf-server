@@ -118,7 +118,7 @@ def process_data():
     city_name_map = dict()
     for row in city_names:
         for key in row.keys():
-            if key.startswith('option') and row.get(key):
+            if key and key.startswith('option') and row.get(key):
                 city_name_map[row[key]] = row['city']
     yield(dict(msg=f"Number of cities: {len(cities)}"))
     ds = DF.Flow(

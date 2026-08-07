@@ -29,6 +29,9 @@ PRIVATE_KEY = '_private_'
 
 GOOGLE_MAPS_API_KEY = SecretParam("GOOGLE_MAPS_API_KEY").value.strip()
 
+LOGOS_CACHE_TTL = datetime.timedelta(days=1)
+logos_cache = None
+
 
 def geocode(address):
     url = f'https://maps.googleapis.com/maps/api/geocode/json'
@@ -102,6 +105,20 @@ def sanitize_metadata(metadata, exclude_private=True):
 #     }
 #     db.collection(WS, workspace_id).document(".config").set(config)
 #     return {"workspace_id": workspace_id, "config": config}, 201
+
+@app.get("/logos")
+def get_logos():
+    global logos_cache
+    now = datetime.datetime.now(datetime.timezone.utc)
+    if logos_cache is None or logos_cache[0] < now:
+        payload = []
+        for doc in db.collection(WS).stream():
+            metadata = (doc.to_dict() or {}).get('metadata') or {}
+            logo_url = (metadata.get('logo_url') or '').strip()
+            if logo_url:
+                payload.append(dict(id=doc.id, city=metadata.get('city'), logo_url=logo_url))
+        logos_cache = (now + LOGOS_CACHE_TTL, payload)
+    return logos_cache[1], 200
 
 @app.post("/<workspace>")
 def create_item(workspace):

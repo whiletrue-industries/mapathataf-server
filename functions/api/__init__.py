@@ -2,6 +2,7 @@ import json
 from firebase_functions.params import SecretParam
 from firebase_admin import firestore
 import flask
+import re
 import uuid
 from itertools import islice
 import datetime
@@ -32,24 +33,47 @@ GOOGLE_MAPS_API_KEY = SecretParam("GOOGLE_MAPS_API_KEY").value.strip()
 LOGOS_CACHE_TTL = datetime.timedelta(days=1)
 logos_cache = None
 
+# Location field model:
+# - admin.geocode_address: admin-entered address (or plus code) fed to geocoding
+# - admin.lat/lng/formatted_address: geocode results for geocode_address
+# - admin.display_address: display-only override, never geocoded
+# - admin._private_geocoding_status / _private_geocoded_input: status of the last
+#   geocode and the exact geocode_address it ran on
+PLUS_CODE_CHARS = '23456789CFGHJMPQRVWX'
+SHORT_PLUS_CODE_RE = re.compile(rf'^[{PLUS_CODE_CHARS}]{{4,6}}\+[{PLUS_CODE_CHARS}]{{2,3}}$', re.IGNORECASE)
+PLUS_CODE_RE = re.compile(rf'^[{PLUS_CODE_CHARS}]{{4,8}}\+[{PLUS_CODE_CHARS}]{{2,3}}(\s.+)?$', re.IGNORECASE)
+GEOCODE_RESULT_FIELDS = ('lat', 'lng', 'formatted_address')
+GEOCODE_FIELDS = ('geocode_address',) + GEOCODE_RESULT_FIELDS + ('_private_geocoding_status', '_private_geocoded_input')
 
-def geocode(address):
-    url = f'https://maps.googleapis.com/maps/api/geocode/json'
+
+def geocode(address, city=None):
+    query = address.strip()
+    # Plus codes come back as GEOMETRIC_CENTER, which the accuracy gate below
+    # would reject, but they are precise by construction
+    is_plus_code = bool(PLUS_CODE_RE.match(query))
+    if city and SHORT_PLUS_CODE_RE.match(query):
+        query = f'{query} {city}'
+    url = 'https://maps.googleapis.com/maps/api/geocode/json'
     params = {
-        'address': address,
+        'address': query,
         'key': GOOGLE_MAPS_API_KEY,
         'language': 'iw',
         'components': 'country:IL',
     }
-    response = requests.get(url, params=params)
-    result = response.json()
     update = dict(
-        _private_geocoding_status='INITIAL'
+        _private_geocoding_status='ERROR',
+        _private_geocoded_input=address,
     )
-    if result['status'] == 'OK':
+    try:
+        result = requests.get(url, params=params).json()
+    except requests.RequestException:
+        return update
+    if result['status'] == 'ZERO_RESULTS':
+        update['_private_geocoding_status'] = 'ZERO_RESULTS'
+    elif result['status'] == 'OK':
         result = result['results'][0]
         accuracy = result['geometry']['location_type']
-        if accuracy in {'ROOFTOP', 'RANGE_INTERPOLATED'}:
+        if is_plus_code or accuracy in {'ROOFTOP', 'RANGE_INTERPOLATED'}:
             location = result['geometry']['location']
             update.update(dict(
                 lat=location['lat'],
@@ -58,14 +82,7 @@ def geocode(address):
                 _private_geocoding_status='OK',
             ))
         else:
-            update.update(dict(
-                _private_geocoding_status='INACCURATE',
-            ))
-        for component in result['address_components']:
-            if 'locality' in component['types']:
-                update.update(dict(
-                    city=component['long_name'],
-                ))
+            update['_private_geocoding_status'] = 'INACCURATE'
     return update
 
 # Helper functions for authentication and utility
@@ -255,13 +272,32 @@ def update_item(workspace, item_id):
         item_ref.update({"info": item["info"]})
     metadata = flask.request.json
     metadata = sanitize_metadata(metadata, privilege < PRIVILEGE_PRIVATE_KEY)
-    if 'address' in metadata:
-        metadata.update(geocode(metadata['address']))
+    geocode_update = None
+    clear_geocode = False
+    if privilege == PRIVILEGE_ADMIN and 'geocode_address' in metadata:
+        geocode_address = str(metadata.pop('geocode_address') or '').strip()
+        if geocode_address:
+            metadata['geocode_address'] = geocode_address
+            city = None
+            if SHORT_PLUS_CODE_RE.match(geocode_address):
+                config = db.collection(WS).document(workspace).get().to_dict() or {}
+                city = (config.get('metadata') or {}).get('city')
+            geocode_update = geocode(geocode_address, city=city)
+            metadata.update(geocode_update)
+        else:
+            clear_geocode = True
     metadata['updated_at'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     if privilege > PRIVILEGE_PRIVATE_KEY:
         item.setdefault('admin', {}).update(metadata)
-        item_ref.update({"admin": item["admin"]})
-        return item["admin"], 200
+        admin = item['admin']
+        if clear_geocode:
+            for field in GEOCODE_FIELDS:
+                admin.pop(field, None)
+        elif geocode_update is not None and geocode_update['_private_geocoding_status'] != 'OK':
+            for field in GEOCODE_RESULT_FIELDS:
+                admin.pop(field, None)
+        item_ref.update({"admin": admin})
+        return admin, 200
     elif privilege == PRIVILEGE_PRIVATE_KEY:
         item.setdefault('user', {}).update(metadata)
         item_ref.update({"user": item["user"]})

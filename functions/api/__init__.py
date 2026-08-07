@@ -1,6 +1,6 @@
 import json
 from firebase_functions.params import SecretParam
-from firebase_admin import firestore
+from firebase_admin import firestore, auth, storage
 import flask
 import re
 import uuid
@@ -20,6 +20,7 @@ def add_no_cache_headers(response):
     response.headers['Expires'] = '0'
     return response
 
+PRIVILEGE_SUPERADMIN = 5
 PRIVILEGE_ADMIN = 4
 PRIVILEGE_PRIVATE_KEY = 3
 PRIVILEGE_PUBLIC = 0
@@ -27,6 +28,19 @@ PRIVILEGE_PUBLIC = 0
 WS = 'c'
 ITEMS = 'items'
 PRIVATE_KEY = '_private_'
+SETTINGS = 'settings'
+SUPERADMINS_DOC = 'superadmins'
+STORAGE_BUCKET = 'mapathataf.firebasestorage.app'
+BEARER_PREFIX = 'Bearer '
+METADATA_KEY_RE = re.compile(r'^[A-Za-z0-9_]+$')
+LINK_KINDS = {'internal', 'external', 'whatsapp'}
+ALLOWED_LOGO_TYPES = {
+    'image/png': 'png',
+    'image/jpeg': 'jpg',
+    'image/svg+xml': 'svg',
+    'image/webp': 'webp',
+}
+MAX_LOGO_SIZE = 2 * 1024 * 1024
 
 GOOGLE_MAPS_API_KEY = SecretParam("GOOGLE_MAPS_API_KEY").value.strip()
 
@@ -93,11 +107,44 @@ def geocode(address, city=None):
 #         "view": str(uuid.uuid4())
 #     }
 
+def resolve_superadmin(auth_header, strict=True):
+    """Verify a 'Bearer <Google/Firebase id-token>' header against the superadmin
+    allowlist (settings/superadmins doc). Returns the superadmin email, or None
+    when strict=False and the header does not resolve to a superadmin.
+    strict=True aborts: 401 for missing/invalid/expired tokens, 403 for valid
+    tokens that are unverified or not allowlisted."""
+    def fail(code, message):
+        if strict:
+            flask.abort(code, message)
+        return None
+    if not auth_header or not auth_header.startswith(BEARER_PREFIX):
+        return fail(401, "Missing bearer token")
+    token = auth_header[len(BEARER_PREFIX):].strip()
+    try:
+        decoded = auth.verify_id_token(token)
+    except (ValueError, auth.InvalidIdTokenError, auth.ExpiredIdTokenError,
+            auth.RevokedIdTokenError, auth.CertificateFetchError):
+        return fail(401, "Invalid token")
+    email = (decoded.get('email') or '').lower()
+    if not email or not decoded.get('email_verified'):
+        return fail(403, "Unverified email")
+    superadmins = db.collection(SETTINGS).document(SUPERADMINS_DOC).get().to_dict() or {}
+    if email not in [e.lower() for e in superadmins.get('emails', [])]:
+        return fail(403, "Not a superadmin")
+    return email
+
+
+def authenticate_superadmin():
+    return resolve_superadmin(flask.request.headers.get("Authorization"))
+
+
 def authenticate(workspace, key, required_roles):
     config_ref = db.collection(WS).document(workspace)
     config = config_ref.get().to_dict()
     if not config:
         flask.abort(404, "Workspace not found")
+    if key and key.startswith(BEARER_PREFIX) and resolve_superadmin(key, strict=False):
+        return PRIVILEGE_SUPERADMIN
     if "admin" in required_roles and key == config["key"]:
         return PRIVILEGE_ADMIN
     if "view" in required_roles:
@@ -130,12 +177,96 @@ def get_logos():
     if logos_cache is None or logos_cache[0] < now:
         payload = []
         for doc in db.collection(WS).stream():
-            metadata = (doc.to_dict() or {}).get('metadata') or {}
+            data = doc.to_dict() or {}
+            metadata = data.get('metadata') or {}
             logo_url = (metadata.get('logo_url') or '').strip()
-            if logo_url:
+            if data.get('active') and logo_url:
                 payload.append(dict(id=doc.id, city=metadata.get('city'), logo_url=logo_url))
         logos_cache = (now + LOGOS_CACHE_TTL, payload)
     return logos_cache[1], 200
+
+def workspace_payload(doc_id, data):
+    data = data or {}
+    return dict(
+        id=doc_id,
+        metadata=data.get('metadata') or {},
+        key=data.get('key'),
+        favorite=data.get('favorite', False),
+        active=data.get('active', False),
+    )
+
+@app.get("/manage/workspaces")
+def manage_list_workspaces():
+    authenticate_superadmin()
+    payload = [workspace_payload(doc.id, doc.to_dict()) for doc in db.collection(WS).stream()]
+    return payload, 200
+
+@app.put("/manage/workspaces/<workspace>")
+def manage_update_workspace(workspace):
+    global logos_cache
+    authenticate_superadmin()
+    doc_ref = db.collection(WS).document(workspace)
+    if not doc_ref.get().to_dict():
+        flask.abort(404, "Workspace not found")
+    body = flask.request.json
+    if not isinstance(body, dict):
+        flask.abort(400, "Invalid body")
+    unknown = set(body.keys()) - {'metadata', 'favorite', 'active'}
+    if unknown:
+        flask.abort(400, f"Unknown keys: {sorted(unknown)}")
+    updates = {}
+    metadata = body.get('metadata')
+    if metadata is not None:
+        if not isinstance(metadata, dict):
+            flask.abort(400, "metadata must be an object")
+        for k, v in metadata.items():
+            if not METADATA_KEY_RE.match(k):
+                flask.abort(400, f"Invalid metadata key: {k!r}")
+            if k == 'links' and v is not None:
+                if not isinstance(v, list) or any(
+                        not isinstance(link, dict) or link.get('kind') not in LINK_KINDS
+                        for link in v):
+                    flask.abort(400, "links must be a list of objects with kind internal/external/whatsapp")
+            updates[f'metadata.{k}'] = firestore.DELETE_FIELD if v is None else v
+    for flag in ('favorite', 'active'):
+        if flag in body:
+            if not isinstance(body[flag], bool):
+                flask.abort(400, f"{flag} must be a boolean")
+            updates[flag] = body[flag]
+    if updates:
+        doc_ref.update(updates)
+        logos_cache = None
+    return workspace_payload(workspace, doc_ref.get().to_dict()), 200
+
+@app.post("/manage/workspaces/<workspace>/logo")
+def manage_upload_logo(workspace):
+    global logos_cache
+    authenticate_superadmin()
+    doc_ref = db.collection(WS).document(workspace)
+    if not doc_ref.get().to_dict():
+        flask.abort(404, "Workspace not found")
+    if (flask.request.content_length or 0) > MAX_LOGO_SIZE + 64 * 1024:
+        flask.abort(400, "Logo too large (max 2MB)")
+    file = flask.request.files.get('logo')
+    if file is None:
+        flask.abort(400, "Missing 'logo' file field")
+    ext = ALLOWED_LOGO_TYPES.get(file.mimetype)
+    if ext is None:
+        flask.abort(400, f"Unsupported logo type: {file.mimetype}")
+    bucket = storage.bucket(STORAGE_BUCKET)
+    blob = bucket.blob(f'logos/{workspace}-{uuid.uuid4().hex[:8]}.{ext}')
+    blob.cache_control = 'public, max-age=31536000, immutable'
+    blob.upload_from_file(file.stream, content_type=file.mimetype)
+    try:
+        blob.make_public()
+    except Exception as e:
+        # Uniform bucket-level access rejects per-object ACLs; rely on
+        # bucket-level public read in that case
+        print(f'make_public failed (uniform bucket-level access?): {e}')
+    logo_url = f'https://storage.googleapis.com/{bucket.name}/{blob.name}'
+    doc_ref.update({'metadata.logo_url': logo_url})
+    logos_cache = None
+    return {'logo_url': logo_url}, 200
 
 @app.post("/<workspace>")
 def create_item(workspace):
@@ -274,7 +405,7 @@ def update_item(workspace, item_id):
     metadata = sanitize_metadata(metadata, privilege < PRIVILEGE_PRIVATE_KEY)
     geocode_update = None
     clear_geocode = False
-    if privilege == PRIVILEGE_ADMIN and 'geocode_address' in metadata:
+    if privilege >= PRIVILEGE_ADMIN and 'geocode_address' in metadata:
         geocode_address = str(metadata.pop('geocode_address') or '').strip()
         if geocode_address:
             metadata['geocode_address'] = geocode_address

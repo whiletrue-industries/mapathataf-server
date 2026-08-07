@@ -13,6 +13,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with mock.patch('firebase_admin.firestore.client'):
     import api  # noqa: E402
 
+DELETE_FIELD = api.firestore.DELETE_FIELD
+
 
 class FakeSnapshot:
     def __init__(self, data):
@@ -31,7 +33,18 @@ class FakeDocRef:
         return FakeSnapshot(self._docs.get(self._key))
 
     def update(self, values):
-        self._docs.setdefault(self._key, {}).update(copy.deepcopy(values))
+        # Mirror Firestore update() semantics: dotted keys address nested maps,
+        # DELETE_FIELD removes the addressed key
+        doc = self._docs.setdefault(self._key, {})
+        for path, value in values.items():
+            parts = path.split('.')
+            target = doc
+            for part in parts[:-1]:
+                target = target.setdefault(part, {})
+            if value is DELETE_FIELD:
+                target.pop(parts[-1], None)
+            else:
+                target[parts[-1]] = copy.deepcopy(value)
 
 
 class FakeStreamedDoc:
@@ -49,16 +62,22 @@ class FakeCollection:
         self._db = db
         self._path = path
 
+    def _top_level_docs(self):
+        if self._path[0] == api.SETTINGS:
+            return self._db.settings
+        return self._db.workspaces
+
     def document(self, doc_id):
         if len(self._path) == 1:
-            return FakeDocRef(self._db.workspaces, doc_id)
+            return FakeDocRef(self._top_level_docs(), doc_id)
         return FakeDocRef(self._db.items, (self._path[1], doc_id))
 
     def stream(self):
         if len(self._path) == 1:
-            for doc_id in list(self._db.workspaces):
-                yield FakeStreamedDoc(doc_id, self._db.workspaces[doc_id],
-                                      FakeDocRef(self._db.workspaces, doc_id))
+            docs = self._top_level_docs()
+            for doc_id in list(docs):
+                yield FakeStreamedDoc(doc_id, docs[doc_id],
+                                      FakeDocRef(docs, doc_id))
         else:
             workspace = self._path[1]
             for key in list(self._db.items):
@@ -68,20 +87,50 @@ class FakeCollection:
 
 
 class FakeDB:
-    """In-memory stand-in for the two-level Firestore layout (c/{ws}/items/{id})."""
+    """In-memory stand-in for the Firestore layout (c/{ws}/items/{id} + settings/*)."""
 
     def __init__(self):
         self.workspaces = {}
         self.items = {}
+        self.settings = {}
 
     def collection(self, *path):
         return FakeCollection(self, path)
+
+
+class FakeBlob:
+    def __init__(self, bucket, name):
+        self._bucket = bucket
+        self.name = name
+        self.cache_control = None
+        self.content_type = None
+        self.public = False
+
+    def upload_from_file(self, stream, content_type=None):
+        self.content_type = content_type
+        self._bucket.blobs[self.name] = self
+        self.data = stream.read()
+
+    def make_public(self):
+        self.public = True
+
+
+class FakeBucket:
+    def __init__(self, name):
+        self.name = name
+        self.blobs = {}
+
+    def blob(self, name):
+        return FakeBlob(self, name)
 
 
 ADMIN_KEY = 'admin-key'
 ITEM_KEY = 'item-key-1'
 WORKSPACE = 'testws'
 ITEM_ID = 'item1'
+SUPERADMIN_EMAIL = 'root@example.com'
+SUPERADMIN_TOKEN = 'good-token'
+SUPERADMIN_HEADER = {'Authorization': f'Bearer {SUPERADMIN_TOKEN}'}
 
 
 @pytest.fixture
@@ -100,6 +149,34 @@ def db(monkeypatch):
 
 
 @pytest.fixture
+def superadmin(db, monkeypatch):
+    """Seeds the allowlist and fakes id-token verification.
+    Tokens: 'good-token' -> superadmin, 'stranger-token' -> verified but not
+    allowlisted, 'unverified-token' -> unverified email, anything else raises."""
+    db.settings[api.SUPERADMINS_DOC] = {'emails': [SUPERADMIN_EMAIL]}
+
+    def fake_verify(token):
+        if token == SUPERADMIN_TOKEN:
+            return {'email': SUPERADMIN_EMAIL, 'email_verified': True}
+        if token == 'stranger-token':
+            return {'email': 'stranger@example.com', 'email_verified': True}
+        if token == 'unverified-token':
+            return {'email': SUPERADMIN_EMAIL, 'email_verified': False}
+        raise api.auth.InvalidIdTokenError('bad token')
+
+    monkeypatch.setattr(api.auth, 'verify_id_token', fake_verify)
+    return db
+
+
+@pytest.fixture
+def bucket(monkeypatch):
+    fake = FakeBucket(api.STORAGE_BUCKET)
+    monkeypatch.setattr(api.storage, 'bucket', lambda name: fake)
+    return fake
+
+
+@pytest.fixture
 def client():
     api.app.config['TESTING'] = True
+    api.logos_cache = None
     return api.app.test_client()

@@ -1,0 +1,8 @@
+# Minimal dependencies to import functions/api and run the test suite
+# (the full requirements.txt pulls the heavy data-pipeline stack, which the
+# API tests do not need)
+firebase-functions>=0.4.0
+firebase-admin
+flask
+requests
+pytest

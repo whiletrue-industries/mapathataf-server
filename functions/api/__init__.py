@@ -156,6 +156,14 @@ def sanitize_metadata(metadata, exclude_private=True):
         return {k: v for k, v in metadata.items() if not k.startswith(PRIVATE_KEY)}
     return metadata
 
+def make_blob_public(blob):
+    try:
+        blob.make_public()
+    except Exception as e:
+        # Uniform bucket-level access rejects per-object ACLs; rely on
+        # bucket-level public read in that case
+        print(f'make_public failed (uniform bucket-level access?): {e}')
+
 # Endpoints
 # @app.post("/")
 # def create_workspace():
@@ -257,12 +265,7 @@ def manage_upload_logo(workspace):
     blob = bucket.blob(f'logos/{workspace}-{uuid.uuid4().hex[:8]}.{ext}')
     blob.cache_control = 'public, max-age=31536000, immutable'
     blob.upload_from_file(file.stream, content_type=file.mimetype)
-    try:
-        blob.make_public()
-    except Exception as e:
-        # Uniform bucket-level access rejects per-object ACLs; rely on
-        # bucket-level public read in that case
-        print(f'make_public failed (uniform bucket-level access?): {e}')
+    make_blob_public(blob)
     logo_url = f'https://storage.googleapis.com/{bucket.name}/{blob.name}'
     doc_ref.update({'metadata.logo_url': logo_url})
     logos_cache = None

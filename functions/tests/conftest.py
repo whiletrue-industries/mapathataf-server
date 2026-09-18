@@ -111,6 +111,11 @@ class FakeBlob:
         self._bucket.blobs[self.name] = self
         self.data = stream.read()
 
+    def upload_from_string(self, data, content_type=None):
+        self.content_type = content_type
+        self._bucket.blobs[self.name] = self
+        self.data = data
+
     def make_public(self):
         self.public = True
 

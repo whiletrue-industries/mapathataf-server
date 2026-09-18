@@ -32,6 +32,12 @@ class FakeDocRef:
     def get(self):
         return FakeSnapshot(self._docs.get(self._key))
 
+    def set(self, data):
+        self._docs[self._key] = copy.deepcopy(data)
+
+    def delete(self):
+        self._docs.pop(self._key, None)
+
     def update(self, values):
         # Mirror Firestore update() semantics: dotted keys address nested maps,
         # DELETE_FIELD removes the addressed key
@@ -86,6 +92,21 @@ class FakeCollection:
                                           FakeDocRef(self._db.items, key))
 
 
+class FakeBatch:
+    def __init__(self):
+        self._ops = []
+
+    def set(self, ref, data):
+        self._ops.append(lambda: ref.set(data))
+
+    def delete(self, ref):
+        self._ops.append(ref.delete)
+
+    def commit(self):
+        for op in self._ops:
+            op()
+
+
 class FakeDB:
     """In-memory stand-in for the Firestore layout (c/{ws}/items/{id} + settings/*)."""
 
@@ -96,6 +117,9 @@ class FakeDB:
 
     def collection(self, *path):
         return FakeCollection(self, path)
+
+    def batch(self):
+        return FakeBatch()
 
 
 class FakeBlob:

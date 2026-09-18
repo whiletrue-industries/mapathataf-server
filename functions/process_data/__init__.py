@@ -5,9 +5,10 @@ import dataflows as DF
 import json
 import csv
 import slugify
-import hashlib
 import uuid
 import datetime
+
+import tipat_halav
 
 csv.field_size_limit(1000000000)
 
@@ -45,9 +46,8 @@ def map_names(city_name_map):
             row['city'] = city_name_map[city]
     return func
 
-def slugify_row():
-    used = dict()
-    existing_slugs = set()
+def slugify_row(used, existing_slugs):
+    # used / existing_slugs are shared by all the loaded files, so that slugs stay unique across them
     def func(row):
         city = row['city']
         if city not in used:
@@ -57,7 +57,7 @@ def slugify_row():
             existing_slugs.add(slug)
             print(f"SLUG {city} ===> {slug}")
         row['city-slug'] = used[city]
-        row['id-slug'] = hashlib.md5(row['_id'].encode()).hexdigest()[:8]
+        row['id-slug'] = tipat_halav.doc_id(row['_id'])
         # print(f"ID SLUG {row['_id']} ===> {row['id-slug']}")
         assert row['id-slug'] not in existing_slugs, f"ID slug {row['id-slug']} already exists for id {row['_id']}!"
         existing_slugs.add(row['id-slug'])
@@ -121,13 +121,14 @@ def process_data():
             if key and key.startswith('option') and row.get(key):
                 city_name_map[row[key]] = row['city']
     yield(dict(msg=f"Number of cities: {len(cities)}"))
+    used_slugs, existing_slugs = dict(), set()
     ds = DF.Flow(
         DF.load(URL),
         # DF.set_type('records', type='array', transform=json.loads),
         map_names(city_name_map),
         # count(cities),
         DF.filter_rows(lambda row: row['city'] in cities),
-        slugify_row(),
+        slugify_row(used_slugs, existing_slugs),
         load_to_storage(),
         DF.printer(),
     ).datastream()
@@ -136,6 +137,24 @@ def process_data():
             if i % 1000 == 0:
                 yield(dict(msg=f"Processed {i} rows from resource"))
             # yield row
+
+    # Health facilities: a separate file with its own schema, coerced into the all-facilities
+    # shape. No de-duplication against the education facilities is needed.
+    yield(dict(msg="Loading Tipat Halav stations..."))
+    stations = DF.Flow(DF.load(tipat_halav.URL)).results()[0][0]
+    stations = [tipat_halav.coerce_row(row) for row in stations if tipat_halav.is_active(row)]
+    yield(dict(msg=f"Number of active Tipat Halav stations: {len(stations)}"))
+    ds = DF.Flow(
+        stations,
+        map_names(city_name_map),
+        DF.filter_rows(lambda row: row['city'] in cities),
+        slugify_row(used_slugs, existing_slugs),
+        load_to_storage(),
+    ).datastream()
+    for res in ds.res_iter:
+        for i, row in enumerate(res):
+            if i % 100 == 0:
+                yield(dict(msg=f"Processed {i} Tipat Halav stations"))
 
     db = firestore.client()
     eshkol = list(csv.DictReader(open(CURRENT_DIR / 'eshkol.csv')))
